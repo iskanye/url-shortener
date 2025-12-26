@@ -1,14 +1,16 @@
 namespace UrlShortener.Services;
 
-public class UrlShortenerService(ApplicationContext context) : IUrlShortenerServices
+public class UrlShortenerService(IApplicationContext context) : IUrlShortenerServices
 {
     private const int SlugLength = 6;
     private const string Alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 
     private readonly Random random = new();
 
-    public async Task<string> GenerateUniqueSlug()
+    public async Task<ShortUrl> GenerateUniqueSlug(string url)
     {
+        string slug;
+
         while (true)
         {
             var slugChars = new char[SlugLength];
@@ -19,12 +21,24 @@ public class UrlShortenerService(ApplicationContext context) : IUrlShortenerServ
                 slugChars[i] = Alphabet[index];
             }
 
-            var slug = new string(slugChars);
+            slug = new string(slugChars);
 
             if (!await context.ShortUrls.AnyAsync(url => url.Slug == slug))
             {
-                return new(slugChars);
+                break;
             }
         }
+
+        var shortUrl = new ShortUrl
+        {
+            Id = new(),
+            Url = url,
+            Slug = slug
+        };
+
+        context.ShortUrls.Add(shortUrl);
+        await context.SaveChangesAsync();
+
+        return shortUrl;
     }
 }

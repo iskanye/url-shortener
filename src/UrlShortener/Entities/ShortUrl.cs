@@ -1,6 +1,5 @@
 namespace UrlShortener.Entities;
 
-[Index("Slug", IsUnique = true)]
 public class ShortUrl
 {
     public Guid Id { get; set; }
