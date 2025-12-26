@@ -2,5 +2,5 @@ namespace UrlShortener.Interfaces;
 
 public interface IUrlShortenerServices
 {
-    public string GenerateUniqueSlug();
+    public Task<string> GenerateUniqueSlug();
 }
