@@ -1,7 +1,7 @@
 FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
 
 COPY . .
-RUN dotnet publish "src/UrlShortener/UrlShortener.csproj" -o /app/publish
+RUN dotnet publish "src/UrlShortener/UrlShortener.csproj" -c Debug -o /app/publish
 
 FROM mcr.microsoft.com/dotnet/aspnet:10.0 AS final
 WORKDIR /app
